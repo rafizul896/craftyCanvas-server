@@ -28,22 +28,30 @@ async function run() {
 
         const paintingAndDrawing = client.db("paintingAndDrawing").collection("craftItemsDB");
 
-        app.get('/craftItmes', async (req, res) => {
+        app.get('/craftItems', async (req, res) => {
             const result = await paintingAndDrawing.find().toArray();
             res.send(result)
         })
 
-        app.get('/craftItmes/:id',async (req,res)=>{
+        app.get('/craftItems/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id: new ObjectId(id)};
+            const query = { _id: new ObjectId(id) };
             const result = await paintingAndDrawing.findOne(query);
             res.send(result)
         })
 
-        app.post('/craftItmes', async (req, res) => {
-            const newCraftItmes = req.body;
-            console.log(newCraftItmes);
-            const result = await paintingAndDrawing.insertOne(newCraftItmes);
+        app.get('/myCraftItems/:email', async (req, res) => {
+            const email = req.params.email;
+            console.log(email)
+            const query = { user_email: email };
+            const result = await paintingAndDrawing.find(query).toArray();
+            res.send(result)
+        })
+
+        app.post('/craftItems', async (req, res) => {
+            const newCraftItems = req.body;
+            console.log(newCraftItems);
+            const result = await paintingAndDrawing.insertOne(newCraftItems);
             res.send(result)
         })
 
