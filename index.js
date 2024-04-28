@@ -55,6 +55,38 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/myCraftItems/:email/:id', async (req, res) => {
+            const id = req.params.id;
+            const email = req.params.email;
+            console.log(email)
+            const query = { _id: new ObjectId(id), user_email: email };
+            const result = await paintingAndDrawing.findOne(query);
+            res.send(result)
+        })
+
+        app.put('/myCraftItems/:email/:id', async (req, res) => {
+            const craftItem = req.body;
+            const id = req.params.id;
+            const email = req.params.email;
+            const filter = { _id: new ObjectId(id), user_email: email };
+            const options = { upsert: true };
+            const updateCraftItem = {
+                $set: {
+                    item_name: craftItem.item_name,
+                    subcategory_Name: craftItem.subcategory_Name,
+                    short_description: craftItem.short_description,
+                    image: craftItem.image,
+                    price: craftItem.price,
+                    rating: craftItem.rating,
+                    customization: craftItem.customization,
+                    processing_time: craftItem.processing_time,
+                    stockStatus: craftItem.stockStatus,
+                }
+            };
+            const result = await paintingAndDrawing.updateOne(filter, updateCraftItem, options);
+            res.send(result)
+        })
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
