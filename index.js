@@ -27,9 +27,22 @@ async function run() {
         await client.connect();
 
         const paintingAndDrawing = client.db("paintingAndDrawing").collection("craftItemsDB");
+        const artCraftCategories = client.db("paintingAndDrawing").collection("artCraftCategories");
 
         app.get('/craftItems', async (req, res) => {
             const result = await paintingAndDrawing.find().toArray();
+            res.send(result)
+        })
+
+        app.get('/artCraftCategories', async (req, res) => {
+            const result = await artCraftCategories.find().toArray();
+            res.send(result)
+        })
+
+        app.get('/subCategories/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await artCraftCategories.findOne(query);
             res.send(result)
         })
 
@@ -83,7 +96,16 @@ async function run() {
                     stockStatus: craftItem.stockStatus,
                 }
             };
+
             const result = await paintingAndDrawing.updateOne(filter, updateCraftItem, options);
+            res.send(result)
+        })
+
+        app.delete('/myCraftItems/:email/:id', async (req, res) => {
+            const id = req.params.id;
+            const email = req.params.email;
+            const query = { _id: new ObjectId(id), user_email: email };
+            const result = await paintingAndDrawing.deleteOne(query);
             res.send(result)
         })
 
