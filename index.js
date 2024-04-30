@@ -13,7 +13,9 @@ const corsOptions = {
     credentials: true,
     optionSuccessStatus: 200,
 }
-app.use(cors(corsOptions));
+app.use(cors({
+    origin:["http://localhost:5173","https://assignment-ten-a519c.web.app"]
+}));
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.y7qmkns.mongodb.net/?retryWrites=true&w=majority&appName=cluster0`;
@@ -30,7 +32,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
 
         const paintingAndDrawing = client.db("paintingAndDrawing").collection("craftItemsDB");
         const artCraftCategories = client.db("paintingAndDrawing").collection("artCraftCategories");
